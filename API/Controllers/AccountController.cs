@@ -4,26 +4,26 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    public class AccountController(DataContext context, ITokenService tokenService) : BaseApiController
+    public class AccountController(DataContext context, ITokenService tokenService, IMapper mapper) : BaseApiController
     {
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
-            using var hmac = new HMACSHA512();
-
             if(await UserExisits(registerDto.Username)) return BadRequest("username is already taken");
 
-            var user = new AppUser
-            {
-                UserName = registerDto.Username.ToLower(),
-                PasshwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-                PasshwordSalt = hmac.Key
-            };
+            using var hmac = new HMACSHA512();
+            
+            var user = mapper.Map<AppUser>(registerDto);
+
+            user.UserName = registerDto.Username.ToLower();
+            user.PasshwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+            user.PasshwordSalt = hmac.Key;
 
             context.Users.Add(user);
             await context.SaveChangesAsync();
@@ -31,6 +31,7 @@ namespace API.Controllers
             return new UserDto
             {
                 Username = user.UserName,
+                KnownAs = user.KnownAs,
                 PhotoUrl = null,
                 Token = tokenService.CreateToken(user)
             };
@@ -54,6 +55,7 @@ namespace API.Controllers
             return new UserDto
             {
                 Username = user.UserName,
+                KnownAs = user.KnownAs,
                 PhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain).Url,
                 Token = tokenService.CreateToken(user)
             };

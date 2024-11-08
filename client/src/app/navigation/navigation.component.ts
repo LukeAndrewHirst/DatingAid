@@ -16,19 +16,19 @@ import { TitleCasePipe } from '@angular/common';
 export class NavigationComponent {
   private router = inject(Router);
   private toastr = inject(ToastrService);
-  accountservice = inject(AccountService);
+  accountService = inject(AccountService);
 
   model: any = {};
 
   login(){
-    this.accountservice.login(this.model).subscribe({
+    this.accountService.login(this.model).subscribe({
       next: response => {this.router.navigateByUrl('/members');},
       error: error => {this.toastr.error(error.error); console.log(error)}
     });
   }
 
   logout(){
-    this.accountservice.logout();
+    this.accountService.logout();
     this.router.navigateByUrl('/');
   }
 }
