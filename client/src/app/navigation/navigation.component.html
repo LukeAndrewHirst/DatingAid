@@ -9,18 +9,11 @@
                     <a routerLink="/members" routerLinkActive="active" class="nav-link">Matches</a>
                 </li>
                 <li class="nav-item">
-                    <a routerLink="/lists" routerLinkActive="active" class="nav-link">Lists</a>
+                    <a routerLink="/liked-members" routerLinkActive="active" class="nav-link">Liked Members</a>
                 </li>
                 <li class="nav-item">
                     <a routerLink="/messages" routerLinkActive="active" class="nav-link">Messages</a>
-                </li>
-                <li class="nav-item">
-                    <a routerLink="/admin" routerLinkActive="active" class="nav-link">Admin</a>
-                </li>
             }
-            <li class="nav-item">
-                <a routerLink="/errors" routerLinkActive="active" class="nav-link">Errors</a>
-            </li>
         </ul>
 
         @if (accountService.currentUser()) {

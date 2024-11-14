@@ -1,4 +1,5 @@
 using API.Data;
+using API.Data.Repository;
 using API.Helpers;
 using API.Interfaces;
 using API.Services;
@@ -19,6 +20,7 @@ namespace API.Extensions
             services.AddCors();
             services.AddScoped<ITokenService,TokenService>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ILikesRepository, LikesRepository>();
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<LogUserActivity>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
