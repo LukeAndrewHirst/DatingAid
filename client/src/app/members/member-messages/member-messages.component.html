@@ -1,0 +1,44 @@
+<div class="card">
+    <div class="card-body">
+        @if (messages().length ==0) {
+            <p>No messages to display</p>
+        }@else {
+            <ul class="chat">
+                @for (message of messages(); track message.id) {
+                   <li>
+                        <div>
+                            <span class="chat-img float-end">
+                                <img class="rounded-circle" src="{{message.senderPhotoUrl || '../assets/img/user.png'}}" alt="sender image">
+                            </span>
+                            <div class="chat-body">
+                                <div class="header">
+                                    <small class="text-muted">
+                                        <span class="fa fa-clock-o">{{message.messageSent | timeago}}</span>
+                                        @if (!message.dateRead && message.senderUsername !== username() && message.dateRead != DateParse()) {
+                                            <span class="text-danger"> (unread)</span>
+                                        }
+                                        @if (message.dateRead && message.senderUsername !== username() && message.dateRead != DateParse()) {
+                                            <span class="text-success"> (read {{message.dateRead | timeago}})</span>
+                                        }
+                                    </small>
+                                </div>
+                                <p>{{message.content}}</p>
+                            </div>
+                        </div>
+                   </li>
+                }
+            </ul>
+        }
+    </div>
+    <div class="card-footer">
+        <form #messageForm="ngForm" (ngSubmit)="sendMessage()">
+            <div class="input-group">
+                <input class="form-control input-sm" name="messageContent" required [(ngModel)]="messageContent" type="text" placeholder="Send a message...">
+                <div class="input-group-append">
+                    <button class="btn btn-dark" type="submit" [disabled]="!messageForm.valid"><i class="fa fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

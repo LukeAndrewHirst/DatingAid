@@ -9,6 +9,7 @@ import { TestErrorsComponent } from './errors/test-errors/test-errors.component'
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { preventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
+import { memberDetailedResolver } from './_resolvers/member-detailed.resolver';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -17,7 +18,7 @@ export const routes: Routes = [
         canActivate: [authGuard],
         children: [
             {path: 'members', component: MemberListComponent},
-            {path: 'members/:username', component: MemberDetailComponent},
+            {path: 'members/:username', component: MemberDetailComponent, resolve: {member: memberDetailedResolver}},
             {path: 'member/edit', component: MemberEditComponent, canDeactivate: [preventUnsavedChangesGuard]},
             {path: 'liked-members', component: LikedListsComponent},
             {path: 'messages', component: MessagesComponent},

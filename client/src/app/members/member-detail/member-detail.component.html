@@ -1,53 +1,52 @@
-@if(member) {
-    <div class="row">
-        <div class="col-4">
-            <div class="card">
-                <img class="card-img img-thumnail" src="../assets/img/user.png" alt="{{member.knownAs}}">
-                <div class="card-body">
-                    <div>
-                        <strong>Location:</strong>
-                        <p>{{member.country}} , {{member.city}}</p>
-                    </div>
-                    <div>
-                        <strong>Age:</strong>
-                        <p>{{member.age}}</p>
-                    </div>
-                    <div>
-                        <strong>Last Active:</strong>
-                        <p>{{member.lastActive | timeago}}</p>
-                    </div>
-                    <div>
-                        <strong>Member Since:</strong>
-                        <p>{{member.created | date: 'dd MMMM yyy'}}</p>
-                    </div>
+<div class="row">
+    <div class="col-4">
+        <div class="card">
+            <img class="card-img img-thumnail" src="{{member.photoUrl || '../assets/img/user.png'}}"
+                alt="{{member.knownAs}}">
+            <div class="card-body">
+                <div>
+                    <strong>Location:</strong>
+                    <p>{{member.country}} , {{member.city}}</p>
                 </div>
-                <div class="card-footer">
-                    <div class="btn-group d-flex">
-                        <button class="btn btn-primary">Like</button>
-                        <button class="btn btn-dark">Messages</button>
-                    </div>
+                <div>
+                    <strong>Age:</strong>
+                    <p>{{member.age}}</p>
+                </div>
+                <div>
+                    <strong>Last Active:</strong>
+                    <p>{{member.lastActive | timeago}}</p>
+                </div>
+                <div>
+                    <strong>Member Since:</strong>
+                    <p>{{member.created | date: 'dd MMMM yyy'}}</p>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="btn-group d-flex">
+                    <button class="btn btn-primary">Like</button>
+                    <button class="btn btn-dark" (click)="selectTab('Messages')">Messages</button>
                 </div>
             </div>
         </div>
-        <div class="col-8">
-            <tabset class="member-tabs">
-                <tab heading="About {{member.knownAs}}">
-                    <h4>Description</h4>
-                    <p>{{member.introduction}}</p>
-                </tab>
-                <tab heading="Interest">
-                    <h4>Interest</h4>
-                    <p>{{member.intrests}}</p>
-                </tab>
-                <tab heading="Photos" #photoTab="tab">
-                    @if (photoTab.active) {
-                        <gallery [items]="images" class="gallery" [itemAutosize]="true"></gallery>
-                    }
-                </tab>
-                <tab heading="Messages">
-                    <p>Messages feature coming soon!</p>
-                </tab>
-            </tabset>
-        </div>
     </div>
-}
+    <div class="col-8">
+        <tabset class="member-tabs" #memberTabs>
+            <tab heading="About {{member.knownAs}}" (selectTab)="onTabActivated($event)">
+                <h4>Description</h4>
+                <p>{{member.introduction}}</p>
+            </tab>
+            <tab heading="Interest" (selectTab)="onTabActivated($event)">
+                <h4>Interest</h4>
+                <p>{{member.intrests}}</p>
+            </tab>
+            <tab heading="Photos" #photoTab="tab" (selectTab)="onTabActivated($event)">
+                @if (photoTab.active) {
+                <gallery [items]="images" class="gallery" [itemAutosize]="true"></gallery>
+                }
+            </tab>
+            <tab heading="Messages" (selectTab)="onTabActivated($event)">
+                <app-member-messages [username]="member.userName" [messages]="messages" (updateMessages)="onUpdateMessages($event)"></app-member-messages>
+            </tab>
+        </tabset>
+    </div>
+</div>
