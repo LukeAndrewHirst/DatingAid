@@ -3,7 +3,6 @@ using API.Entities;
 using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
-using AutoMapper.Execution;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 

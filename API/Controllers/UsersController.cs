@@ -1,16 +1,14 @@
-using System.Security.Claims;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
 using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Authorize]
+
     public class UsersController(IUserRepository userRepository, IMapper mapper, IPhotoService photoService) : BaseApiController
     {
         [HttpGet("get-all-users")]
@@ -25,7 +23,7 @@ namespace API.Controllers
 
             return Ok(users);
         }
-
+        
         [HttpGet("get-user-by-username/{username}")]
         public async Task<ActionResult<MemberDto>> GetUserByUserName(string username)
         {

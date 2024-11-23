@@ -4,11 +4,12 @@ import { AccountService } from '../_services/account.service';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { HasRoleDirective } from '../_directives/has-role.directive';
 
 @Component({
   selector: 'app-navigation',
   standalone: true,
-  imports: [FormsModule, BsDropdownModule, RouterLink, RouterLinkActive],
+  imports: [FormsModule, BsDropdownModule, RouterLink, RouterLinkActive, HasRoleDirective],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.css'
 })
@@ -16,6 +17,7 @@ export class NavigationComponent {
   private router = inject(Router);
   private toastr = inject(ToastrService);
   accountService = inject(AccountService);
+
 
   model: any = {};
 

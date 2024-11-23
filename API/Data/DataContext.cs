@@ -1,13 +1,13 @@
 using API.Entities;
-using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
 {
-    public class DataContext(DbContextOptions options) : DbContext(options)
+    public class DataContext(DbContextOptions options) : IdentityDbContext<AppUser, AppRole, int,
+        IdentityUserClaim<int>, AppUserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>(options)
     {
-        public DbSet<AppUser> Users { get; set; }
-
         public DbSet<UserLike> Likes { get; set; }
 
         public DbSet<Message> Messages { get; set; }
@@ -23,6 +23,9 @@ namespace API.Data
 
             builder.Entity<Message>().HasOne(m => m.Recipient).WithMany(m => m.MessagesReceived).OnDelete(DeleteBehavior.Restrict);
             builder.Entity<Message>().HasOne(m => m.Sender).WithMany(m => m.MessagesSent).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<AppUser>().HasMany(ur => ur.UserRoles).WithOne(u => u.User).HasForeignKey(ur => ur.UserId).IsRequired();
+            builder.Entity<AppRole>().HasMany(ur => ur.UserRoles).WithOne(u => u.Role).HasForeignKey(ur => ur.RoleId).IsRequired();
         }
     }
 }

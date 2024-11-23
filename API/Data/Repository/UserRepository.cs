@@ -12,7 +12,7 @@ namespace API.Data
     {
         public async Task<MemberDto> GetMemberByUsername(string username)
         {
-            return await context.Users.Where(u => u.UserName == username).ProjectTo<MemberDto>(mapper.ConfigurationProvider).SingleOrDefaultAsync();
+            return await context.Users.Where(u => u.NormalizedUserName == username.ToUpper()).ProjectTo<MemberDto>(mapper.ConfigurationProvider).SingleOrDefaultAsync();
         }
 
         public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
@@ -46,7 +46,7 @@ namespace API.Data
 
         public async Task<AppUser> GetUserByUsernameAsync(string username)
         {
-            return await context.Users.Include(x => x.Photos).SingleOrDefaultAsync(x => x.UserName == username);
+            return await context.Users.Include(x => x.Photos).SingleOrDefaultAsync(u => u.NormalizedUserName == username.ToUpper());
         }
 
         public async Task<IEnumerable<AppUser>> GetUsersAsync()
