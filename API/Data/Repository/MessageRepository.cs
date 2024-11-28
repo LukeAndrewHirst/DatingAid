@@ -10,6 +10,11 @@ namespace API.Data.Repository
 {
     public class MessageRepository(DataContext context, IMapper mapper) : IMessageRepository
     {
+        public void AddGroup(Group group)
+        {
+            context.Groups.Add(group);
+        }
+
         public void AddMessage(Message message)
         {
             context.Messages.Add(message);
@@ -20,9 +25,9 @@ namespace API.Data.Repository
             context.Remove(message);
         }
 
-        public async Task<Message> GetMessage(int id)
+        public void RemoveConnection(Connection connection)
         {
-            return await context.Messages.FindAsync(id);
+            context.Connections.Remove(connection);
         }
 
         public async Task<PagedList<MessageDto>> GetMessagesForUser(MessageParams messageParams)
@@ -44,9 +49,10 @@ namespace API.Data.Repository
 
         public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUsername)
         {
-            var messages = await context.Messages.Include(m => m.Sender).ThenInclude(p => p.Photos).Include(m => m.Recipient).ThenInclude(p => p.Photos)
+            var messages = await context.Messages
             .Where(m => m.RecipientUsername == currentUsername && m.RecipientDeleted == false && m.SenderUsername == recipientUsername 
-            || m.SenderUsername == currentUsername && m.SenderDeleted == false && m.RecipientUsername == recipientUsername).OrderBy(m => m.MessageSent).ToListAsync();
+            || m.SenderUsername == currentUsername && m.SenderDeleted == false && m.RecipientUsername == recipientUsername)
+            .OrderBy(m => m.MessageSent).ProjectTo<MessageDto>(mapper.ConfigurationProvider).ToListAsync();
 
             var unreadMessages = messages.Where(m => m.DateRead == DateTime.Parse("0001-01-01 00:00:00.0000000") && m.RecipientUsername == currentUsername).ToList();
 
@@ -56,12 +62,32 @@ namespace API.Data.Repository
                 await context.SaveChangesAsync();
             }
 
-            return mapper.Map<IEnumerable<MessageDto>>(messages);
+            return messages;
         }
 
         public async Task<bool> SaveAllAsync()
         {
             return await context.SaveChangesAsync() >0;
+        }
+
+        public async Task<Message> GetMessage(int id)
+        {
+            return await context.Messages.FindAsync(id);
+        }
+
+        public async Task<Connection> GetConnection(string connectionId)
+        {
+             return await context.Connections.FindAsync(connectionId);
+        }
+
+        public async Task<Group> GetMessageGroup(string groupName)
+        {
+            return await context.Groups.Include(mg => mg.Connections).FirstOrDefaultAsync(mg => mg.Name == groupName);
+        }
+
+        public async Task<Group> GetGroupForConnection(string connectionId)
+        {
+            return await context.Groups.Include(g => g.Connections).Where(g => g.Connections.Any(gc => gc.ConnectionId == connectionId)).FirstOrDefaultAsync();
         }
     }
 }
