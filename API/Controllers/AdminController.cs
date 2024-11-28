@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    public class AdminController(IAdminRepository adminRepository, IUserRepository userRepository) : BaseApiController
+    public class AdminController(IAdminRepository adminRepository, IUnitOfWork unitOfWork) : BaseApiController
     {
         [Authorize(Policy="RequireAdminRole")]
         [HttpGet("users-with-roles")]
@@ -24,7 +24,7 @@ namespace API.Controllers
 
             var selectedRoles = roles.Split(",").ToArray();
 
-            var user = await userRepository.GetUserByUsernameAsync(username);
+            var user = await unitOfWork.UserRepository.GetUserByUsernameAsync(username);
             if(user == null) return BadRequest("User not found");
 
             var userRoles = await adminRepository.GetUserRoles(user);

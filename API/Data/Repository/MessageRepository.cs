@@ -49,25 +49,19 @@ namespace API.Data.Repository
 
         public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUsername)
         {
-            var messages = await context.Messages
+            var query = context.Messages
             .Where(m => m.RecipientUsername == currentUsername && m.RecipientDeleted == false && m.SenderUsername == recipientUsername 
             || m.SenderUsername == currentUsername && m.SenderDeleted == false && m.RecipientUsername == recipientUsername)
-            .OrderBy(m => m.MessageSent).ProjectTo<MessageDto>(mapper.ConfigurationProvider).ToListAsync();
+            .OrderBy(m => m.MessageSent).AsQueryable();
 
-            var unreadMessages = messages.Where(m => m.DateRead == DateTime.Parse("0001-01-01 00:00:00.0000000") && m.RecipientUsername == currentUsername).ToList();
+            var unreadMessages = query.Where(m => m.DateRead == DateTime.Parse("0001-01-01 00:00:00.0000000") && m.RecipientUsername == currentUsername).ToList();
 
             if(unreadMessages.Count != 0)
             {
                 unreadMessages.ForEach(m => m.DateRead = DateTime.Now);
-                await context.SaveChangesAsync();
             }
 
-            return messages;
-        }
-
-        public async Task<bool> SaveAllAsync()
-        {
-            return await context.SaveChangesAsync() >0;
+            return await query.ProjectTo<MessageDto>(mapper.ConfigurationProvider).ToListAsync();
         }
 
         public async Task<Message> GetMessage(int id)
