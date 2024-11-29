@@ -41,6 +41,7 @@ export class MessageService {
           messages.forEach(message => {
             if(!message.dateRead) {
               message.dateRead = new Date(Date.now());
+              message.IsRead = true
             }
           })
           return messages;

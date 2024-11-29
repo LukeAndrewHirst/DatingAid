@@ -14,10 +14,10 @@
                                 <div class="header">
                                     <small class="text-muted">
                                         <span class="fa fa-clock-o">{{message.messageSent | timeago}}</span>
-                                        @if (!message.dateRead && message.senderUsername !== username() && message.dateRead != DateParse()) {
+                                        @if (message.senderUsername !== username() && message.IsRead == false) {
                                             <span class="text-danger"> (unread)</span>
                                         }
-                                        @if (message.dateRead && message.senderUsername !== username() && message.dateRead != DateParse()) {
+                                        @if (message.dateRead && message.senderUsername !== username() && message.dateRead !== DateParse()) {
                                             <span class="text-success"> (read {{message.dateRead | timeago}})</span>
                                         }
                                     </small>

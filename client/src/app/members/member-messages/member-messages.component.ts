@@ -19,7 +19,7 @@ export class MemberMessagesComponent implements AfterViewChecked {
   username = input.required<string>();
 
   messageContent = '';
-  defaultDate = '0001-01-01T00:00:00';
+  defaultDate = '0001-01-01T00:00:00Z';
 
   DateParse(){
     return new Date(Date.parse(this.defaultDate));

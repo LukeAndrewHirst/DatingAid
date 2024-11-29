@@ -30,7 +30,8 @@ namespace API.Controllers
                 Recipient = recipient,
                 SenderUsername = sender.UserName,
                 RecipientUsername = recipient.UserName,
-                Content = createMessageDto.Content
+                Content = createMessageDto.Content,
+                IsRead = false
             };
 
             unitOfWork.MessageRepository.AddMessage(message);

@@ -60,7 +60,8 @@ namespace API.SignalR
                 Recipient = recipient,
                 SenderUsername = sender.UserName,
                 RecipientUsername = recipient.UserName,
-                Content = createMessageDto.Content
+                Content = createMessageDto.Content,
+                IsRead = false
             };
 
             var groupName = GetGroupName(sender.UserName, recipient.UserName);
@@ -69,6 +70,7 @@ namespace API.SignalR
             if(group != null && group.Connections.Any(u => u.Username == recipient.UserName))
             {
                 message.DateRead = DateTime.UtcNow;
+                message.IsRead = true;
             }
             else
             {

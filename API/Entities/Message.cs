@@ -19,6 +19,8 @@ namespace API.Entities
 
         public bool RecipientDeleted { get; set; }
 
+        public bool IsRead { get; set; }
+
         public int SenderId { get; set; }
 
         public AppUser Sender { get; set; } = null!;

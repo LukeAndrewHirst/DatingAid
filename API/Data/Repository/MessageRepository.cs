@@ -36,10 +36,9 @@ namespace API.Data.Repository
 
             query = messageParams.Container switch
             {
-                "Inbox" => query.Where(m => m.Recipient.UserName == messageParams.Username && m.RecipientDeleted == false),
-                "Outbox" => query.Where(m => m.Sender.UserName == messageParams.Username && m.SenderDeleted == false),
-                _ => query.Where(m => m.Recipient.UserName == messageParams.Username && m.DateRead == DateTime.Parse("0001-01-01 00:00:00.0000000") 
-                    && m.RecipientDeleted == false)
+                "Inbox" => query.Where(x => x.Recipient.UserName == messageParams.Username && x.RecipientDeleted == false),
+                "Outbox" => query.Where(x => x.Sender.UserName == messageParams.Username && x.SenderDeleted == true),
+                _ => query.Where(x => x.Recipient.UserName == messageParams.Username && x.IsRead == false && x.RecipientDeleted == false)
             };
 
             var messages = query.ProjectTo<MessageDto>(mapper.ConfigurationProvider);
@@ -54,7 +53,7 @@ namespace API.Data.Repository
             || m.SenderUsername == currentUsername && m.SenderDeleted == false && m.RecipientUsername == recipientUsername)
             .OrderBy(m => m.MessageSent).AsQueryable();
 
-            var unreadMessages = query.Where(m => m.DateRead == DateTime.Parse("0001-01-01 00:00:00.0000000") && m.RecipientUsername == currentUsername).ToList();
+            var unreadMessages = query.Where(m => m.IsRead == false && m.RecipientUsername == currentUsername).ToList();
 
             if(unreadMessages.Count != 0)
             {
