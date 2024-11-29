@@ -27,10 +27,9 @@ namespace API.Controllers
         [HttpGet("get-user-by-username/{username}")]
         public async Task<ActionResult<MemberDto>> GetUserByUserName(string username)
         {
-            var user = await unitOfWork.UserRepository.GetMemberByUsername(username);
-            if(user == null) return BadRequest("User not found");
+            var currentUsername = User.GetUsername();
 
-            return Ok(user);
+            return await unitOfWork.UserRepository.GetMemberByUsername(username, isCurrentUser: currentUsername == username);
         }
 
         [HttpPut("update-user")]
@@ -60,8 +59,6 @@ namespace API.Controllers
                 Url = result.SecureUrl.AbsoluteUri,
                 PublicId = result.PublicId
             };
-
-            if(user.Photos.Count == 0) photo.IsMain = true;
 
             user.Photos.Add(photo);
 
@@ -95,7 +92,7 @@ namespace API.Controllers
             var user = await unitOfWork.UserRepository.GetUserByUsernameAsync(User.GetUsername());
             if(user == null) return BadRequest("User not found");
 
-            var photo = user.Photos.FirstOrDefault(p => p.Id == photoId);
+            var photo = await unitOfWork.PhotoRepository.GetPhotoById(photoId);
             if(photo == null || photo.IsMain) return BadRequest("Unable to delete photo, this is the main photo of the users profile");
 
             if(photo.PublicId != null)
