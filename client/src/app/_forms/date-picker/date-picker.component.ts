@@ -3,11 +3,10 @@ import { ControlValueAccessor, FormControl, NgControl, ReactiveFormsModule } fro
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @Component({
-  selector: 'app-date-picker',
-  standalone: true,
-  imports: [BsDatepickerModule, ReactiveFormsModule],
-  templateUrl: './date-picker.component.html',
-  styleUrl: './date-picker.component.css'
+    selector: 'app-date-picker',
+    imports: [BsDatepickerModule, ReactiveFormsModule],
+    templateUrl: './date-picker.component.html',
+    styleUrl: './date-picker.component.css'
 })
 export class DatePickerComponent implements ControlValueAccessor {
   label = input<string>('');

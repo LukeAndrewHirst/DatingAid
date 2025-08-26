@@ -7,11 +7,10 @@ import { ToastrService } from 'ngx-toastr';
 import { HasRoleDirective } from '../_directives/has-role.directive';
 
 @Component({
-  selector: 'app-navigation',
-  standalone: true,
-  imports: [FormsModule, BsDropdownModule, RouterLink, RouterLinkActive, HasRoleDirective],
-  templateUrl: './navigation.component.html',
-  styleUrl: './navigation.component.css'
+    selector: 'app-navigation',
+    imports: [FormsModule, BsDropdownModule, RouterLink, RouterLinkActive, HasRoleDirective],
+    templateUrl: './navigation.component.html',
+    styleUrl: './navigation.component.css'
 })
 export class NavigationComponent {
   private router = inject(Router);

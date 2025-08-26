@@ -6,11 +6,10 @@ import { MemberCardComponent } from '../members/member-card/member-card.componen
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
-  selector: 'app-liked-lists',
-  standalone: true,
-  imports: [FormsModule, ButtonsModule, MemberCardComponent, PaginationModule],
-  templateUrl: './liked-lists.component.html',
-  styleUrl: './liked-lists.component.css'
+    selector: 'app-liked-lists',
+    imports: [FormsModule, ButtonsModule, MemberCardComponent, PaginationModule],
+    templateUrl: './liked-lists.component.html',
+    styleUrl: './liked-lists.component.css'
 })
 export class LikedListsComponent implements OnInit, OnDestroy {
   likesService = inject(LikesService);
